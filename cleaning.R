@@ -2,7 +2,7 @@
 require(dplyr)
 
 #loading in stava acitivy data as dataframe 
-data <- read.csv("strava_activity.csv")
+data <- read.csv("~/Desktop/StravaAnalysis/strava_activity.csv")
 
 #fixing for mispellings of countries  
 data$location_country[data$location_country == "The Netherlands" | 
@@ -42,7 +42,7 @@ cleaned.dataQ1 <- select(data, athlete.sex, average_speed, max_speed, distance,
 
 
 #creating dataframe for question 2 with cleaned data
-cleaned.dataQ2 <- select(data, location_country, average_watts, moving_time, elapsed_time, type) %>%
+cleaned.dataQ2 <- select(data, location_country, average_watts, moving_time, elapsed_time, total_elevation_gain, type) %>%
                 
                 #use rows only from location_country of top 5 countries by number of entries
                 filter(location_country == "United States" | location_country == "Australia" |
