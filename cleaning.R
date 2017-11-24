@@ -9,8 +9,11 @@ data$location_country[data$location_country == "The Netherlands" |
                       data$location_country == "Nederland"] <- "Netherlands"
 data$location_country[data$location_country == "Brasil"] <- "Brazil"
 
-#removed rows that had an elapsed and moving time of 0
-data <- filter(data, elapsed_time > 0 & moving_time > 0)
+#remove rows that had an elapsed and moving time of 0, 
+data <- filter(data, elapsed_time > 0 & moving_time > 0,
+               
+               #remove rows with exercise lasting longer than a day
+               elapsed_time < 86400)
 
 #find top exercise types by number of entries
 topType <- select(data, type) %>%
@@ -26,18 +29,21 @@ topCountry <- select(data, location_country) %>%
  
 #creating dataframe for question 1 with cleaned data
 cleaned.dataQ1 <- select(data, athlete.sex, average_speed, max_speed, distance, 
-                         average_heartrate, max_heartrate, type) %>%
+                         average_heartrate, type) %>%
   
                   #use rows only from type of top 2 types by number of entries
                   filter(type == "Ride" | type == "Run") %>%
                   
-                  #removed rows that didn't have a gender assigned to them
+                  #remove rows that didn't have a gender assigned to them
                   filter(athlete.sex == 'M' | athlete.sex == 'F')  %>%
                   
-                  #removed rows that have an distance or speed of 0 or less
+                  #remove rows that have an distance or speed of 0 or less
                   filter(distance > 0 & average_speed > 0) %>%
-                  
-                  #removed rows that have an average heart rate of 0 or less
+  
+                  #remove rows that have a higher avg speed than max speed, glitch?
+                  filter(average_speed < max_speed) %>%
+  
+                  #remove rows that have an average heart rate of 0 or less
                   filter(average_heartrate > 0)
 
 
@@ -60,4 +66,3 @@ cleaned.dataQ2 <- select(data, location_country, average_watts, moving_time, ela
 #export dataframes as csv
 write.csv(cleaned.dataQ1, file="cleanedDataQ1.csv", row.names = FALSE)
 write.csv(cleaned.dataQ2, file="cleanedDataQ2.csv", row.names = FALSE)
-
