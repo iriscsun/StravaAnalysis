@@ -27,9 +27,11 @@ topCountry <- select(data, location_country) %>%
   summarise(numEntries = n()) %>%
   arrange(desc(numEntries)) 
  
-#creating dataframe for question 1 with cleaned data
-cleaned.dataQ1 <- select(data, athlete.sex, average_speed, max_speed, distance, 
-                         average_heartrate, type) %>%
+#creating dataframe for question 1, remove rows that have a higher avg speed than max speed
+cleaned.dataQ1 <- filter(data, average_speed < max_speed) %>%
+  
+                  #add sex, average speed, distance, average heart rate, and type to dataframe 
+                  select(athlete.sex, average_speed, distance, average_heartrate, type) %>%
   
                   #use rows only from type of top 2 types by number of entries
                   filter(type == "Ride" | type == "Run") %>%
@@ -40,8 +42,6 @@ cleaned.dataQ1 <- select(data, athlete.sex, average_speed, max_speed, distance,
                   #remove rows that have an distance or speed of 0 or less
                   filter(distance > 0 & average_speed > 0) %>%
   
-                  #remove rows that have a higher avg speed than max speed, glitch?
-                  filter(average_speed < max_speed) %>%
   
                   #remove rows that have an average heart rate of 0 or less
                   filter(average_heartrate > 0)

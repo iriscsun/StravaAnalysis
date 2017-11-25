@@ -24,8 +24,8 @@ randF.runs <- f.runs[sample(nrow(f.runs), 200), ]
 randM.runs <- m.runs[sample(nrow(m.runs), 200), ]
 
 #randomly sample 400 entries from each gender for heart-rate
-randF.hr <- f[sample(nrow(f), 400), ]
-randM.hr <- m[sample(nrow(m), 400), ]
+randF.hr <- f.hr[sample(nrow(f.hr), 400), ]
+randM.hr <- m.hr[sample(nrow(m.hr), 400), ]
 
 #combine rides from both genders
 rides <- rbind(randF.rides, randM.rides)
@@ -35,6 +35,11 @@ runs <- rbind(randF.runs, randM.runs)
 
 #combine both genders for heart-rate
 hr <- rbind(randF.hr, randM.hr)
+
+#export dataframes as csv for modeling
+write.csv(rides, file="genderRides.csv", row.names = FALSE)
+write.csv(runs, file="genderRuns.csv", row.names = FALSE)
+write.csv(hr, file="genderHR.csv", row.names = FALSE)
 
 #Plot distribution of average ride speeds for each gender
 rideSpeed.plot <- ggplot(rides ,aes(x=average_speed)) + 
@@ -58,7 +63,8 @@ rideDistance.plot <- ggplot(rides, aes(x=distance)) +
   labs(x = "Distance (Meters)", y = "Count", 
        title = "Distribution of Distances for Bike Rides") +
   scale_fill_manual(name="Gender", values=c("light blue","darkgray"),labels=c("Female","Male")) +
-  theme(legend.position = c(0.35,0.85))
+  theme(legend.position = c(0.45,0.8)) +
+  xlim(0, 150000)
 
 #Plot distribution of average run speeds for each gender
 runSpeed.plot <- ggplot(runs, aes(x=average_speed)) + 
